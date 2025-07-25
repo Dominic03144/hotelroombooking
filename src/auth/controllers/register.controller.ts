@@ -12,7 +12,8 @@ export const registerUser = async (req: Request, res: Response) => {
     // ✅ 1. Validate input
     const parsed = RegisterValidator.safeParse(req.body);
     if (!parsed.success) {
-      return res.status(400).json({ error: parsed.error.flatten() });
+      res.status(400).json({ error: parsed.error.flatten() });
+      return
     }
 
     const {
@@ -30,7 +31,8 @@ export const registerUser = async (req: Request, res: Response) => {
       where: eq(users.email, email),
     });
     if (existing) {
-      return res.status(409).json({ error: "Email already in use." });
+       res.status(409).json({ error: "Email already in use." });
+       return
     }
 
     // ✅ 3. Hash password
@@ -62,12 +64,14 @@ export const registerUser = async (req: Request, res: Response) => {
     await sendVerificationEmail(email, `${firstname} ${lastname}`, code);
 
     // ✅ 8. Respond success
-    return res.status(201).json({
+     res.status(201).json({
       message: "Account created. A verification code has been sent to your email.",
     });
+    return
 
   } catch (err) {
     console.error("❌ Register Error:", err);
-    return res.status(500).json({ error: "Server error. Please try again." });
+     res.status(500).json({ error: "Server error. Please try again." });
+     return
   }
 };
