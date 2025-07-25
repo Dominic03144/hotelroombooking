@@ -31,11 +31,16 @@ const app: Application = express();
 ---------------------------------------- */
 app.use(
   cors({
-    origin: "https://superb-daffodil-9e6ee1.netlify.app", // <-- Update this for production!
+    origin: "https://superb-daffodil-9e6ee1.netlify.app",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
+
+/* ----------------------------------------
+ ✅ CORS preflight for ALL routes
+---------------------------------------- */
+app.options("*", cors());
 
 /* ----------------------------------------
  ✅ Parse cookies
