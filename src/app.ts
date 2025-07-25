@@ -31,7 +31,7 @@ const app: Application = express();
 ---------------------------------------- */
 app.use(
   cors({
-    origin: "http://localhost:5173", // <-- Update this for production!
+    origin: "https://superb-daffodil-9e6ee1.netlify.app/", // <-- Update this for production!
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   })
