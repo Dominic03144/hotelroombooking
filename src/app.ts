@@ -3,7 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 
-// ✅ Stripe webhook must use raw body
+// ✅ Stripe webhook must use raw body before express.json()
 import * as paymentController from "./payment/payment.controller";
 
 // ✅ Auth middleware
@@ -25,13 +25,13 @@ import adminRouter from "./admin/Admin.routes";
 const app: Application = express();
 
 /* ----------------------------------------
-✅ CORS — match your frontend URLs
+✅ CORS — Update this if frontend domain changes
 ---------------------------------------- */
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://superb-daffodil-9e6ee1.netlify.app",
+      "https://superb-daffodil-9e6ee1.netlify.app", // ✅ Netlify frontend
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
@@ -45,7 +45,7 @@ app.use(cookieParser());
 
 /* ----------------------------------------
 ✅ Stripe webhook — MUST come before express.json()
-✅ Updated path to match Stripe Dashboard setting
+✅ Endpoint must match your Stripe Dashboard webhook settings
 ---------------------------------------- */
 app.post(
   "/api/stripe/webhook",
@@ -54,7 +54,7 @@ app.post(
 );
 
 /* ----------------------------------------
-✅ Parse JSON body (must come AFTER webhook)
+✅ JSON body parser — must come AFTER webhook
 ---------------------------------------- */
 app.use(express.json());
 
@@ -66,18 +66,16 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 /* ----------------------------------------
-✅ Routes
+✅ Public + Protected Routes
 ---------------------------------------- */
 
-// Public + Protected Auth routes
-app.use("/api/auth", authRouter);
-
 // Public routes
+app.use("/api/auth", authRouter);
 app.use("/api/hotels", hotelRouter);
 app.use("/api/rooms", roomsRouter);
 app.use("/api/reviews", reviewRouter);
 
-// Protected user routes
+// Authenticated user routes
 app.use("/api/users", authenticate, userRouter);
 app.use("/api/bookings", authenticate, bookingRouter);
 app.use("/api/tickets", authenticate, ticketsRouter);
@@ -87,7 +85,7 @@ app.use("/api/profile", authenticate, profileRouter);
 // Admin-only routes
 app.use("/api/admin", authenticate, isAdmin, adminRouter);
 
-// All other payment-related routes
+// Payment routes
 app.use("/api/payments", paymentRouter);
 
 /* ----------------------------------------
