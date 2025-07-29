@@ -10,28 +10,28 @@ import {
 
 import { authenticate, isAdmin } from "../middleware/auth.middleware";
 
-const router = express.Router();
+const userRouter = express.Router();
 
 // GET /api/users/me - Authenticated user info
-router.get("/me", authenticate, fetchCurrentUser);
+userRouter.get("/me", authenticate, fetchCurrentUser);
 
 // GET /api/users - Admin only
-router.get("/", authenticate, isAdmin, fetchAllUsers);
+userRouter.get("/", authenticate, isAdmin, fetchAllUsers);
 
 // GET /api/users/:id - Admin only
-router.get("/:id", authenticate, isAdmin, fetchUserById);
+userRouter.get("/:id", authenticate, isAdmin, fetchUserById);
 
 // POST /api/users - Admin creates a new user
-router.post("/", authenticate, isAdmin, registerUser);
+userRouter.post("/", authenticate, isAdmin, registerUser);
 
 // PUT /api/users/:id - Admin updates user
-router.put("/:id", authenticate, isAdmin, modifyUser);
+userRouter.put("/:id", authenticate, isAdmin, modifyUser);
 
 // PATCH /api/users/:id - Admin partial updates user (optional)
-router.patch("/:id", authenticate, isAdmin, modifyUser);
+userRouter.patch("/:id", authenticate, isAdmin, modifyUser);
 
 // DELETE /api/users/:id - Admin deletes user
-router.delete("/:id", authenticate, isAdmin, removeUser);
+userRouter.delete("/:id", authenticate, isAdmin, removeUser);
 
 // ✅ Export the router properly
-export default router;
+export default userRouter;

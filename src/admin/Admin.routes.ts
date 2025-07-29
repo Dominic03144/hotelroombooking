@@ -5,15 +5,19 @@ import { getAllPayments } from "../payment/payment.controller"; // ✅ import it
 import { authenticate, isAdmin } from "../middleware/auth.middleware";
 import { getAllPaymentsHandler } from "./adminpayment";
 
-export const adminRoutes = Router();
+const adminRouter = Router();
 
 // Protect all /api/admin routes
-adminRoutes.use(authenticate);
-adminRoutes.use(isAdmin);
+adminRouter.use(authenticate);
+adminRouter.use(isAdmin);
 
 // Admin endpoints
-adminRoutes.post("/users", adminCreateUser);
-adminRoutes.get("/overview", getAdminOverview);
+adminRouter.post("/users", adminCreateUser);
+adminRouter.get("/overview", getAdminOverview);
 
 // ✅ ✅ ✅ ADD THIS:
-adminRoutes.get("/payments", getAllPaymentsHandler);
+adminRouter.get("/payments", getAllPaymentsHandler);
+
+
+export default adminRouter;
+

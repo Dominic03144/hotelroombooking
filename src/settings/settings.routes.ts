@@ -2,9 +2,9 @@ import express from "express";
 import { authenticate } from "../middleware/auth.middleware";
 import * as settingsController from "../settings/settings.controller";
 
-const router = express.Router();
+const settingsRouter = express.Router();
 
-router.put("/email", authenticate, settingsController.updateEmail);
-router.put("/password", authenticate, settingsController.changePassword);
+settingsRouter.put("/email", authenticate, settingsController.updateEmail);
+settingsRouter.put("/password", authenticate, settingsController.changePassword);
 
-export default router;
+export default settingsRouter;

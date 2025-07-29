@@ -1,25 +1,34 @@
-// ✅ src/server.ts
-
-import dotenv from "dotenv";
 import app from "./app";
+import dotenv from "dotenv";
+import db from "./drizzle/db"; // Adjust if needed
 
 dotenv.config();
 
-// Force PORT to be number
-const PORT = Number(process.env.PORT) || 8080;
+// Log key environment variables for debugging
+console.log("Loaded environment variables:");
+console.log("PORT:", process.env.PORT);
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
+console.log("NODE_ENV:", process.env.NODE_ENV);
+console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
 
-process.on("uncaughtException", (err) => {
-  console.error("🔥 UNCAUGHT EXCEPTION:", err);
-  process.exit(1);
-});
+// Parse PORT
+const PORT = process.env.PORT || 8080;
 
-process.on("unhandledRejection", (reason) => {
-  console.error("🔥 UNHANDLED PROMISE REJECTION:", reason);
-  process.exit(1);
-});
+// Check DB connection before starting server
+async function startServer() {
+  try {
+    console.log("Attempting to connect to the database...");
+    await db.execute("SELECT 1");
+    console.log("✅ Database connected successfully");
 
-console.log("✅ Starting up server...");
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Failed to connect to the database:", error);
+    process.exit(1);
+  }
+}
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server running at http://0.0.0.0:${PORT}`);
-});
+startServer();

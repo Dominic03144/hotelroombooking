@@ -14,33 +14,33 @@ import {
 
 import { authenticate } from "../middleware/auth.middleware";
 
-const router = Router();
+const bookingRouter = Router();
 
 // ✅ Create a booking — must be logged in
-router.post("/", authenticate, createBookingHandler);
+bookingRouter.post("/", authenticate, createBookingHandler);
 
 // ✅ Get all bookings — admin only
-router.get("/", authenticate, getAllBookingsHandler);
+bookingRouter.get("/", authenticate, getAllBookingsHandler);
 
 // ✅ ✅ Specific route FIRST: Get bookings for logged-in user
-router.get("/my-bookings", authenticate, getMyBookingsHandler);
+bookingRouter.get("/my-bookings", authenticate, getMyBookingsHandler);
 
 // ✅ Then the generic dynamic route
-router.get("/:id", authenticate, getBookingByIdHandler);
+bookingRouter.get("/:id", authenticate, getBookingByIdHandler);
 
 // ✅ Update booking — user or admin
-router.put("/:id", authenticate, updateBooking);
+bookingRouter.put("/:id", authenticate, updateBooking);
 
 // ✅ Update booking partially — user or admin
-router.patch("/:id", authenticate, updateBooking);
+bookingRouter.patch("/:id", authenticate, updateBooking);
 
 // ✅ Confirm booking — admin only
-router.patch("/:id/confirm", authenticate, confirmBookingHandler);
+bookingRouter.patch("/:id/confirm", authenticate, confirmBookingHandler);
 
 // ✅ Cancel booking — user or admin
-router.patch("/:id/cancel", authenticate, cancelBooking);
+bookingRouter.patch("/:id/cancel", authenticate, cancelBooking);
 
 // ✅ Delete booking — user or admin
-router.delete("/:id", authenticate, deleteBookingHandler);
+bookingRouter.delete("/:id", authenticate, deleteBookingHandler);
 
-export default router;
+export default bookingRouter;

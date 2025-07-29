@@ -37,26 +37,26 @@ const storage = new CloudinaryStorage({
 // ✅ Create multer instance
 const upload = multer({ storage });
 
-const router = Router();
+const  hotelRouter = Router();
 
 /** ✅ PUBLIC ROUTES */
 
 // GET /api/hotels — list all hotels
-router.get("/", fetchAllHotels);
+ hotelRouter.get("/", fetchAllHotels);
 
 // GET /api/hotels/:id — single hotel details
-router.get("/:id", fetchHotelById);
+ hotelRouter.get("/:id", fetchHotelById);
 
 // GET /api/hotels/:id/reviews — hotel reviews
-router.get("/:id/reviews", fetchHotelReviews);
+ hotelRouter.get("/:id/reviews", fetchHotelReviews);
 
 // POST /api/hotels/:id/reviews — create review (auth required)
-router.post("/:id/reviews", authenticate, createHotelReview);
+ hotelRouter.post("/:id/reviews", authenticate, createHotelReview);
 
 /** ✅ ADMIN ROUTES */
 
 // POST /api/hotels — create hotel + image upload to Cloudinary
-router.post(
+ hotelRouter.post(
   "/",
   authenticate,
   authorizeRoles("admin", "owner"),
@@ -65,7 +65,7 @@ router.post(
 );
 
 // PUT /api/hotels/:id — update hotel + image upload
-router.put(
+ hotelRouter.put(
   "/:id",
   authenticate,
   authorizeRoles("admin"),
@@ -74,6 +74,6 @@ router.put(
 );
 
 // DELETE /api/hotels/:id — delete hotel
-router.delete("/:id", authenticate, authorizeRoles("admin"), removeHotel);
+ hotelRouter.delete("/:id", authenticate, authorizeRoles("admin"), removeHotel);
 
-export default router;
+export default hotelRouter;

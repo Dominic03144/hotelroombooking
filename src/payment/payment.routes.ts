@@ -2,13 +2,13 @@ import { Router, RequestHandler } from "express";
 import * as PaymentController from "../payment/payment.controller";
 import { authenticate, authorizeRoles } from "../middleware/auth.middleware";
 
-const router = Router();
+const paymentRouter = Router();
 
 const userOrMemberOrAdmin: RequestHandler = authorizeRoles("user", "member", "admin");
 const adminOnly: RequestHandler = authorizeRoles("admin");
 
 // ✅ Create Stripe Checkout session
-router.post(
+paymentRouter.post(
   "/create-checkout-session",
   authenticate,
   userOrMemberOrAdmin,
@@ -16,13 +16,13 @@ router.post(
 );
 
 // ✅ Stripe Webhook — must NOT use auth middleware — Stripe calls it!
-router.post(
+paymentRouter.post(
   "/webhook",
   PaymentController.handleStripeWebhook
 );
 
 // ✅ Get my payments
-router.get(
+paymentRouter.get(
   "/my",
   authenticate,
   userOrMemberOrAdmin,
@@ -30,7 +30,7 @@ router.get(
 );
 
 // ✅ Get my single payment receipt (NEW!)
-router.get(
+paymentRouter.get(
   "/my/:paymentId/receipt",
   authenticate,
   userOrMemberOrAdmin,
@@ -38,7 +38,7 @@ router.get(
 );
 
 // ✅ Get ALL payments (admin only)
-router.get(
+paymentRouter.get(
   "/",
   authenticate,
   adminOnly,
@@ -46,7 +46,7 @@ router.get(
 );
 
 // ✅ Real-time payment status by transaction ID
-router.get(
+paymentRouter.get(
   "/:transactionId/status",
   authenticate,
   userOrMemberOrAdmin,
@@ -54,32 +54,32 @@ router.get(
 );
 
 // ✅ CRUD placeholders (optional, keep if needed)
-router.post(
+paymentRouter.post(
   "/",
   authenticate,
   userOrMemberOrAdmin,
   PaymentController.createPayment
 );
 
-router.get(
+paymentRouter.get(
   "/:id",
   authenticate,
   userOrMemberOrAdmin,
   PaymentController.getPaymentById
 );
 
-router.patch(
+paymentRouter.patch(
   "/:id/status",
   authenticate,
   adminOnly,
   PaymentController.updatePaymentStatus
 );
 
-router.delete(
+paymentRouter.delete(
   "/:id",
   authenticate,
   adminOnly,
   PaymentController.deletePayment
 );
 
-export default router;
+export default paymentRouter;

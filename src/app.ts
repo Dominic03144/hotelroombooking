@@ -3,52 +3,48 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 
-// ✅ Import routes
-import userRoutes from "./user/user.route";
-import authRoutes from "./auth/auth.routes";
-import hotelRoutes from "./hotel/hotel.routes";
-import roomsRoutes from "./rooms/rooms.routes";
-import bookingRoutes from "./booking/booking.routes";
-import paymentRoutes from "./payment/payment.routes";
-import ticketRoutes from "./tickets/ticket.routes";
-import reviewsRoutes from "./reviews/reviews.routes";
-import settingsRoutes from "./settings/settings.routes";
-import profileRoutes from "./profile/profile.routes";
-
-// ✅ Import admin routes
-import { adminRoutes } from "./admin/Admin.routes";
-
-// ✅ Stripe webhook must be raw
+// ✅ Stripe webhook must use raw body
 import * as paymentController from "./payment/payment.controller";
 
 // ✅ Auth middleware
 import { authenticate, isAdmin } from "./middleware/auth.middleware";
 
+// ✅ Routers
+import hotelRouter from "./hotel/hotel.routes";
+import roomsRouter from "./rooms/rooms.routes";
+import bookingRouter from "./booking/booking.routes";
+import paymentRouter from "./payment/payment.routes";
+import ticketsRouter from "./tickets/ticket.routes";
+import reviewRouter from "./reviews/reviews.routes";
+import settingsRouter from "./settings/settings.routes";
+import profileRouter from "./profile/profile.routes";
+import authRouter from "./auth/auth.routes";
+import userRouter from "./user/user.route";
+import adminRouter from "./admin/Admin.routes";
+
 const app: Application = express();
 
 /* ----------------------------------------
- ✅ CORS — match your frontend URL + credentials
+✅ CORS — match your frontend URLs
 ---------------------------------------- */
 app.use(
   cors({
-    origin: "https://superb-daffodil-9e6ee1.netlify.app",
+    origin: [
+      "http://localhost:5173",
+      "https://superb-daffodil-9e6ee1.netlify.app",
+    ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   })
 );
 
 /* ----------------------------------------
- ✅ CORS preflight for ALL routes
----------------------------------------- */
-app.options("*", cors());
-
-/* ----------------------------------------
- ✅ Parse cookies
+✅ Cookie parser
 ---------------------------------------- */
 app.use(cookieParser());
 
 /* ----------------------------------------
- ✅ Stripe webhook FIRST — raw body!
+✅ Stripe webhook — MUST come before express.json()
 ---------------------------------------- */
 app.post(
   "/api/payments/webhook",
@@ -57,56 +53,44 @@ app.post(
 );
 
 /* ----------------------------------------
- ✅ JSON parser for everything else
+✅ Parse JSON body (must come AFTER webhook)
 ---------------------------------------- */
 app.use(express.json());
 
 /* ----------------------------------------
- ✅ Health check
+✅ Health check
 ---------------------------------------- */
 app.get("/", (_req: Request, res: Response) => {
   res.send("🏨 Welcome to the Hotel Booking System API");
 });
 
 /* ----------------------------------------
- ✅ Routes
+✅ Routes
 ---------------------------------------- */
 
+// Public + Protected Auth routes
+app.use("/api/auth", authRouter);
+
+// Public routes
+app.use("/api/hotels", hotelRouter);
+app.use("/api/rooms", roomsRouter);
+app.use("/api/reviews", reviewRouter);
+
 // Protected user routes
-app.use("/api/users", authenticate, userRoutes);
+app.use("/api/users", authenticate, userRouter);
+app.use("/api/bookings", authenticate, bookingRouter);
+app.use("/api/tickets", authenticate, ticketsRouter);
+app.use("/api/settings", authenticate, settingsRouter);
+app.use("/api/profile", authenticate, profileRouter);
 
-// Auth routes — no auth needed for register/login
-app.use("/api/auth", authRoutes);
+// Admin-only routes
+app.use("/api/admin", authenticate, isAdmin, adminRouter);
 
-// Hotels — mostly public
-app.use("/api/hotels", hotelRoutes);
-
-// Rooms — mostly public
-app.use("/api/rooms", roomsRoutes);
-
-// Bookings — must be authenticated
-app.use("/api/bookings", authenticate, bookingRoutes);
-
-// Payments — handled inside, except webhook above
-app.use("/api/payments", paymentRoutes);
-
-// Support tickets — must be authenticated
-app.use("/api/tickets", authenticate, ticketRoutes);
-
-// Reviews — public or protected
-app.use("/api/reviews", reviewsRoutes);
-
-// ✅ Settings — must be authenticated
-app.use("/api/settings", authenticate, settingsRoutes);
-
-// ✅ Profile — must be authenticated
-app.use("/api/profile", authenticate, profileRoutes);
-
-// Admin routes — must be admin
-app.use("/api/admin", authenticate, isAdmin, adminRoutes);
+// All other payment-related routes
+app.use("/api/payments", paymentRouter);
 
 /* ----------------------------------------
- ✅ Global error handler
+✅ Global error handler
 ---------------------------------------- */
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   console.error("❌ Global error handler:", err);

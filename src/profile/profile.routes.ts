@@ -3,8 +3,8 @@ import { Router } from "express";
 import { authenticate } from "../middleware/auth.middleware";
 import * as profileController from "./profile.controller";
 
-const router = Router();
+const profileRouter = Router();
 
-router.put("/", authenticate, profileController.updateProfile);
+profileRouter.put("/", authenticate, profileController.updateProfile);
 
-export default router;
+export default profileRouter;

@@ -12,14 +12,14 @@ import {
   authorizeRoles,
 } from "../middleware/auth.middleware";
 
-const router = Router();
+const ticketsRouter = Router();
 
 // ---------------------------------------------
 // TICKET ROUTES
 // ---------------------------------------------
 
 // ✅ Create a new ticket — any authenticated user
-router.post(
+ticketsRouter.post(
   "/",
   authenticate,
   authorizeRoles("user", "member", "driver", "admin", "owner"),
@@ -27,7 +27,7 @@ router.post(
 );
 
 // ✅ Get ALL tickets — admin or owner only
-router.get(
+ticketsRouter.get(
   "/",
   authenticate,
   authorizeRoles("admin", "owner"),
@@ -35,7 +35,7 @@ router.get(
 );
 
 // ✅ Get MY tickets — authenticated user only
-router.get(
+ticketsRouter.get(
   "/my",
   authenticate,
   authorizeRoles("user", "member", "driver", "admin", "owner"),
@@ -43,7 +43,7 @@ router.get(
 );
 
 // ✅ Get a single ticket by ID — any authenticated user
-router.get(
+ticketsRouter.get(
   "/:ticketId",
   authenticate,
   authorizeRoles("user", "member", "driver", "admin", "owner"),
@@ -51,7 +51,7 @@ router.get(
 );
 
 // ✅ Delete ticket by ID — admin only
-router.delete(
+ticketsRouter.delete(
   "/:ticketId",
   authenticate,
   authorizeRoles("admin"),
@@ -59,11 +59,11 @@ router.delete(
 );
 
 // ✅ Update ticket status (resolve) — admin only
-router.patch(
+ticketsRouter.patch(
   "/:ticketId",
   authenticate,
   authorizeRoles("admin"),
   resolveTicketHandler
 );
 
-export default router;
+export default ticketsRouter;
