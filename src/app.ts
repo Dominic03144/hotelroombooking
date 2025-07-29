@@ -45,9 +45,10 @@ app.use(cookieParser());
 
 /* ----------------------------------------
 ✅ Stripe webhook — MUST come before express.json()
+✅ Updated path to match Stripe Dashboard setting
 ---------------------------------------- */
 app.post(
-  "/api/payments/webhook",
+  "/api/stripe/webhook",
   bodyParser.raw({ type: "application/json" }),
   paymentController.handleStripeWebhook
 );
