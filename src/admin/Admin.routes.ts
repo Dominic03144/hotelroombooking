@@ -13,7 +13,7 @@ adminRouter.use(isAdmin);
 
 // Admin endpoints
 adminRouter.post("/users", adminCreateUser);
-adminRouter.get("/overview", getAdminOverview);
+adminRouter.get("/admin/overview", getAdminOverview);
 
 // ✅ ✅ ✅ ADD THIS:
 adminRouter.get("/payments", getAllPaymentsHandler);

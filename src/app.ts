@@ -83,7 +83,7 @@ app.use("/api/settings", authenticate, settingsRouter);
 app.use("/api/profile", authenticate, profileRouter);
 
 // Admin-only routes
-app.use("/api/admin", authenticate, isAdmin, adminRouter);
+app.use("/api", authenticate, isAdmin, adminRouter);
 
 // Payment routes
 app.use("/api/payments", paymentRouter);
