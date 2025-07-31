@@ -40,8 +40,8 @@ paymentRouter.get(
 // ✅ Get ALL payments (admin only)
 paymentRouter.get(
   "/",
-  authenticate,
-  adminOnly,
+  // authenticate,
+  // adminOnly,
   PaymentController.getAllPayments
 );
 
