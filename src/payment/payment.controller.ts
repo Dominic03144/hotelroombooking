@@ -50,6 +50,8 @@ export const createStripeCheckoutSession = async (req: Request, res: Response) =
       transactionId: session.id,
       paymentMethod: "card",
     });
+    console.log("✅ Stripe session URL:", session.url);
+
 
     res.json({ url: session.url });
   } catch (error) {
