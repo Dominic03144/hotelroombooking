@@ -35,7 +35,7 @@ export const createStripeCheckoutSession = async (req: Request, res: Response) =
         },
       ],
       mode: "payment",
-      success_url: `https://superb-daffodil-9e6ee1.netlify.app/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `https://superb-daffodil-9e6ee1.netlify.app/payment-success`,
       cancel_url: `https://superb-daffodil-9e6ee1.netlify.app/payment-cancelled`,
 
       customer_email: customerEmail,
